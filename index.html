@@ -70,22 +70,30 @@
         <script>
             function decrypt() {
                 $.ajax({
-                    type: 'post', url: 'https://'+window.location.host+'/decrypt',
-                    data: {data: document.getElementById('data').value},
-                    beforeSend: ()=>{
-                        document.getElementsByClassName('display')[0].innerText = 'Decrypting data...';
+                    type: 'POST',
+                    url: window.location.origin + '/decrypt',
+                    data: {
+                    data: document.getElementById('data').value
                     },
-                    error: ()=>{
-                        document.getElementsByClassName('display')[0].innerText = 'Error: An error occured while trying to process this';
+                    beforeSend: () => {
+                    document.getElementsByClassName('display')[0].innerText = 'Decrypting data...';
                     },
-                    success: (res)=>{
-                        document.getElementsByClassName('display')[0].innerText = res;
+                    error: () => {
+                    document.getElementsByClassName('display')[0].innerText = 'Error: Could not process the request.';
+                    },
+                    success: (res) => {
+                    // Display the result properly
+                    document.getElementsByClassName('display')[0].innerText =
+                        typeof res === 'object' ? res.decrypted || JSON.stringify(res) : res;
                     }
-                })
+                });
             }
-            document.getElementsByTagName('form')[0].onsubmit = (e)=> {
-                e.preventDefault()
+
+            document.getElementsByTagName('form')[0].onsubmit = (e) => {
+                e.preventDefault();
+                decrypt();
             };
+
         </script>
     </div>
 </body>

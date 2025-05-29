@@ -2,10 +2,8 @@ const express = require('express');
 const path = require('path');
 const fs = require('fs');
 const axios = require('axios');
-const bodyParser = require('body-parser');
 const dotenv = require('dotenv').config();
 const cors = require('cors');
-const nodemailer = require('nodemailer');
 const crypt = require('./lib/crypt');
 
 const port = 2355;
@@ -24,10 +22,13 @@ try {
   allowedOrigins = [];
 }
 
+console.log(allowedOrigins)
+
 // CORS config
 const corsOptions = {
   origin: function (origin, callback) {
     if (!origin || allowedOrigins.includes(origin)) {
+        console.log('allowed');
       return callback(null, true);
     } else {
       return callback(new Error('CORS not allowed for this domain'));
@@ -56,6 +57,8 @@ app.post('/encrypt', (req, res) => {
 
 app.post('/decrypt', (req, res) => {
   const { data } = req.body;
+  console.log(data)
+  console.log(crypt.decrypt(data));
   res.json(crypt.decrypt(data));
 });
 
