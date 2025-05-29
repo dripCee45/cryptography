@@ -11,6 +11,18 @@ const port=2355;
 
 //Fetch API Libraries
 const crypt = require('./lib/crypt');
+// Load allowed domains from JSON file
+let allowedOrigins = [];
+
+try {
+  allowedOrigins = JSON.parse(fs.readFileSync('./allowed-origins.json', 'utf-8'));
+  if (!Array.isArray(allowedOrigins)) {
+    allowedOrigins = [];
+  }
+} catch (e) {
+  console.error("Error loading allowed origins:", e.message);
+  allowedOrigins = [];
+}
 
 
 const app = express();
@@ -18,10 +30,6 @@ const app = express();
 app.use(express.urlencoded({
     extended: true
 }));
-
-try {
-    const allowedOrigins = process.env.allowedOrigins
-}catch(e){const allowedOrigins=[]}
 
 const corsOptions = {
     origin: function (origin, callback) {
