@@ -19,11 +19,9 @@ app.use(express.urlencoded({
     extended: true
 }));
 
-const allowedOrigins = [
-    'https://example.com',
-    'https://myapp.com',
-    'http://localhost:2355'  // Dev environment (Vite)
-];
+try {
+    const allowedOrigins = process.env.allowedOrigins
+}catch(e){const allowedOrigins=[]}
 
 const corsOptions = {
     origin: function (origin, callback) {
