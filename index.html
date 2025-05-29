@@ -46,7 +46,7 @@
         }
     </style>
     <div class="root">
-        <form>
+        <form method="post">
             <svg width="800px" height="800px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                 <!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
                 <title>ic_fluent_incognito_24_filled</title>
@@ -68,8 +68,10 @@
             <span>Powered by SPICE</span>
         </form>
         <script>
-            function decrypt() {
-                document.getElementsByClassName('display')[0].innerText = 'Decrypting data...';
+            async function decrypt() {
+              document.getElementsByClassName('display')[0].innerText = 'Decrypting data...';
+            
+              try {
                 const res = await fetch('/api/decrypt', {
                   method: 'POST',
                   headers: {
@@ -77,10 +79,17 @@
                   },
                   body: JSON.stringify({ data: document.getElementById('data').value })
                 });
+            
+                const json = await res.json();
+            
                 document.getElementsByClassName('display')[0].innerText =
-                    typeof res === 'object' ? res.decrypted || JSON.stringify(res) : res;
-                }
+                  typeof json === 'object' ? json.decrypted || JSON.stringify(json) : json;
+              } catch (err) {
+                document.getElementsByClassName('display')[0].innerText =
+                  'Failed to decrypt: ' + err.message;
+              }
             }
+
 
             document.getElementsByTagName('form')[0].onsubmit = (e) => {
                 e.preventDefault();
